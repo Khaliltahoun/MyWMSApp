@@ -37,6 +37,16 @@ public class Place {
     public boolean isOccupied() { return isOccupied; }
     public void setOccupied(boolean occupied) { isOccupied = occupied; }
 
+    // Ajout des méthodes demandées
+    public String getName() {
+        return "Emplacement " + locationCode;
+    }
+
+    public int getCapacity() {
+        // Supposons que la capacité est déterminée par le volume de l'emplacement
+        return (int) (maxWidth * maxHeight * maxDepth);
+    }
+
     @Override
     public String toString() {
         return "Place{" +

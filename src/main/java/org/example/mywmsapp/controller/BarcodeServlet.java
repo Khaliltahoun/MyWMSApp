@@ -13,7 +13,7 @@ import org.example.mywmsapp.service.WarehouseService;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/scan")  // ✅ Ensure this matches the form action in scan.jsp
+@WebServlet("/scan")  // ✅ Assurez-vous que cela correspond au formulaire dans scan.jsp
 public class BarcodeServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -26,23 +26,25 @@ public class BarcodeServlet extends HttpServlet {
         String barcode = request.getParameter("barcode");
 
         if (barcode == null || barcode.trim().isEmpty()) {
-            response.sendRedirect("scan.jsp?error=No barcode provided");
+            request.setAttribute("error", "Aucun code-barres fourni !");
+            request.getRequestDispatcher("scan.jsp").forward(request, response);
             return;
         }
 
-        // 🔍 Fetch product from database or Odoo
+        // 🔍 Recherche du produit dans la base de données ou via Odoo
         Product product = barcodeService.scanProduct(barcode);
         if (product == null) {
-            response.sendRedirect("scan.jsp?error=Product not found");
+            request.setAttribute("error", "Produit non trouvé !");
+            request.getRequestDispatcher("scan.jsp").forward(request, response);
             return;
         }
 
-        // 🔄 Get available places for the scanned product
+        // 🔄 Recherche des emplacements disponibles pour stocker le produit
         List<Place> availablePlaces = warehouseService.getAvailablePlacesForProduct(
                 product.getWidth(), product.getHeight(), product.getDepth()
         );
 
-        // ✅ Pass product & available places to JSP
+        // ✅ Envoi des données à la page JSP
         request.setAttribute("product", product);
         request.setAttribute("places", availablePlaces);
         request.getRequestDispatcher("scan.jsp").forward(request, response);
