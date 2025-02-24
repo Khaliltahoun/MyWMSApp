@@ -30,7 +30,6 @@
   <tr><th>Quantity</th><td><%= product.getQuantity() %></td></tr>
 </table>
 <% } else { %>
-<p class="alert alert-warning">🔎 No product found. Try again.</p>
 <% } %>
 </body>
 </html>
