@@ -7,14 +7,18 @@ public class Warehouse {
     private String name;
     private String location;
     private List<Place> places;
+    private List<Section> sections;  // 🔹 Nouvelle info : les sections de l’entrepôt
+    private int totalCapacity;       // 🔹 Nouvelle info : capacité totale de stockage
 
     public Warehouse() {}
 
-    public Warehouse(int id, String name, String location, List<Place> places) {
+    public Warehouse(int id, String name, String location, List<Place> places, List<Section> sections, int totalCapacity) {
         this.id = id;
         this.name = name;
         this.location = location;
         this.places = places;
+        this.sections = sections;
+        this.totalCapacity = totalCapacity;
     }
 
     public int getId() { return id; }
@@ -29,13 +33,27 @@ public class Warehouse {
     public List<Place> getPlaces() { return places; }
     public void setPlaces(List<Place> places) { this.places = places; }
 
+    public List<Section> getSections() { return sections; }
+    public void setSections(List<Section> sections) { this.sections = sections; }
+
+    public int getTotalCapacity() { return totalCapacity; }
+    public void setTotalCapacity(int totalCapacity) { this.totalCapacity = totalCapacity; }
+
+    // 🔹 Méthode pour calculer la capacité restante
+    public int getRemainingCapacity() {
+        int occupied = (int) places.stream().filter(Place::isOccupied).count();
+        return totalCapacity - occupied;
+    }
+
     @Override
     public String toString() {
         return "Warehouse{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", location='" + location + '\'' +
-                ", places=" + places +
+                ", totalCapacity=" + totalCapacity +
+                ", remainingCapacity=" + getRemainingCapacity() +  // 🔹 Affichage de la capacité restante
+                ", sections=" + sections +
                 '}';
     }
 }

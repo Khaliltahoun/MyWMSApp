@@ -7,14 +7,18 @@ public class BarcodeScan {
     private String barcode;
     private Date scanDate;
     private int warehouseId;
+    private int sectionId;  // 🔹 Nouvelle information : section associée
+    private int placeId;    // 🔹 Nouvelle information : emplacement exact
 
     public BarcodeScan() {}
 
-    public BarcodeScan(int id, String barcode, Date scanDate, int warehouseId) {
+    public BarcodeScan(int id, String barcode, Date scanDate, int warehouseId, int sectionId, int placeId) {
         this.id = id;
         this.barcode = barcode;
         this.scanDate = scanDate;
         this.warehouseId = warehouseId;
+        this.sectionId = sectionId;
+        this.placeId = placeId;
     }
 
     public int getId() { return id; }
@@ -29,6 +33,12 @@ public class BarcodeScan {
     public int getWarehouseId() { return warehouseId; }
     public void setWarehouseId(int warehouseId) { this.warehouseId = warehouseId; }
 
+    public int getSectionId() { return sectionId; }  // 🔹 Getter pour section
+    public void setSectionId(int sectionId) { this.sectionId = sectionId; }
+
+    public int getPlaceId() { return placeId; }  // 🔹 Getter pour emplacement
+    public void setPlaceId(int placeId) { this.placeId = placeId; }
+
     @Override
     public String toString() {
         return "BarcodeScan{" +
@@ -36,6 +46,8 @@ public class BarcodeScan {
                 ", barcode='" + barcode + '\'' +
                 ", scanDate=" + scanDate +
                 ", warehouseId=" + warehouseId +
+                ", sectionId=" + sectionId +  // 🔹 Affichage de la section
+                ", placeId=" + placeId +      // 🔹 Affichage de l’emplacement
                 '}';
     }
 }

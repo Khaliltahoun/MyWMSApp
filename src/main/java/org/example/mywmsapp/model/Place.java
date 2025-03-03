@@ -2,59 +2,84 @@ package org.example.mywmsapp.model;
 
 public class Place {
     private int id;
-    private String locationCode;
-    private double maxWidth;
-    private double maxHeight;
-    private double maxDepth;
+    private int categoryId;   // 🔹 Catégorie associée à l’emplacement (1,2,3,4)
+    private int rowIndex;     // 🔹 Ligne dans la matrice (0 à 3)
+    private int colIndex;     // 🔹 Colonne dans la matrice (0 à 24)
     private boolean isOccupied;
 
     public Place() {}
 
-    public Place(int id, String locationCode, double maxWidth, double maxHeight, double maxDepth, boolean isOccupied) {
+    public Place(int id, int categoryId, int rowIndex, int colIndex, boolean isOccupied) {
         this.id = id;
-        this.locationCode = locationCode;
-        this.maxWidth = maxWidth;
-        this.maxHeight = maxHeight;
-        this.maxDepth = maxDepth;
+        this.categoryId = categoryId;
+        this.rowIndex = rowIndex;
+        this.colIndex = colIndex;
         this.isOccupied = isOccupied;
     }
 
+    // ✅ Getters et Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
-    public String getLocationCode() { return locationCode; }
-    public void setLocationCode(String locationCode) { this.locationCode = locationCode; }
+    public int getCategoryId() { return categoryId; }
+    public void setCategoryId(int categoryId) { this.categoryId = categoryId; }
 
-    public double getMaxWidth() { return maxWidth; }
-    public void setMaxWidth(double maxWidth) { this.maxWidth = maxWidth; }
+    public int getRowIndex() { return rowIndex; }
+    public void setRowIndex(int rowIndex) { this.rowIndex = rowIndex; }
 
-    public double getMaxHeight() { return maxHeight; }
-    public void setMaxHeight(double maxHeight) { this.maxHeight = maxHeight; }
-
-    public double getMaxDepth() { return maxDepth; }
-    public void setMaxDepth(double maxDepth) { this.maxDepth = maxDepth; }
+    public int getColIndex() { return colIndex; }
+    public void setColIndex(int colIndex) { this.colIndex = colIndex; }
 
     public boolean isOccupied() { return isOccupied; }
     public void setOccupied(boolean occupied) { isOccupied = occupied; }
 
-    // Ajout des méthodes demandées
+    // ✅ Retourne le nom de l’emplacement sous forme "Catégorie X - Ligne Y, Colonne Z"
     public String getName() {
-        return "Emplacement " + locationCode;
+        return "Catégorie " + categoryId + " - Ligne " + rowIndex + ", Colonne " + colIndex;
     }
 
-    public int getCapacity() {
-        // Supposons que la capacité est déterminée par le volume de l'emplacement
-        return (int) (maxWidth * maxHeight * maxDepth);
+    // ✅ Indique si un produit de cette catégorie peut être stocké ici
+    public boolean canStoreProduct(int productCategoryId) {
+        return !isOccupied && productCategoryId == this.categoryId;
     }
+
+    public int getSectionId() {
+        return categoryId;  // 📌 Retourne la catégorie qui est équivalente à une section
+    }
+
+    public double getDistance(int refRow, int refCol) {
+        // Calcul de la distance euclidienne
+        return Math.sqrt(Math.pow(this.rowIndex - refRow, 2) + Math.pow(this.colIndex - refCol, 2));
+    }
+
+    private String lastStoredProduct; // Stocke le dernier produit
+
+    public String getLastStoredProduct() {
+        return lastStoredProduct;
+    }
+
+    public void setLastStoredProduct(String productName) {
+        this.lastStoredProduct = productName;
+    }
+
+    public Place(int id, int rowIndex, int colIndex, boolean occupied) {
+        this.id = id;
+        this.rowIndex = rowIndex;
+        this.colIndex = colIndex;
+        this.isOccupied = true;
+        this.lastStoredProduct = null; // Par défaut, aucun produit stocké
+    }
+
+
+
 
     @Override
     public String toString() {
         return "Place{" +
                 "id=" + id +
-                ", locationCode='" + locationCode + '\'' +
-                ", maxWidth=" + maxWidth +
-                ", maxHeight=" + maxHeight +
-                ", maxDepth=" + maxDepth +
+                ", categoryId=" + categoryId +
+                ", rowIndex=" + rowIndex +
+                ", colIndex=" + colIndex +
                 ", isOccupied=" + isOccupied +
                 '}';
     }

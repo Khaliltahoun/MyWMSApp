@@ -12,11 +12,9 @@ import java.util.List;
 public class ProductDAO {
 
     public Product getProductByBarcode(String barcode) {
-        String sql = "SELECT * FROM products WHERE barcode = ?";
-
+        String query = "SELECT id, name, barcode, width, height, depth, quantity, category FROM products WHERE barcode = ?";
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+             PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, barcode);
             ResultSet rs = stmt.executeQuery();
 
@@ -28,7 +26,9 @@ public class ProductDAO {
                         rs.getDouble("width"),
                         rs.getDouble("height"),
                         rs.getDouble("depth"),
-                        rs.getInt("quantity")
+                        rs.getDouble("quantity"),  // 🔥 Vérifier que c'est bien récupéré en `double`
+                        rs.getInt("category"),
+                        5  // Seuil de stock par défaut
                 );
             }
         } catch (SQLException e) {
@@ -37,8 +37,9 @@ public class ProductDAO {
         return null;
     }
 
+
     public boolean insertProduct(Product product) {
-        String sql = "INSERT INTO products (name, barcode, width, height, depth, quantity) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO products (name, barcode, width, height, depth, quantity, category) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -48,7 +49,8 @@ public class ProductDAO {
             stmt.setDouble(3, product.getWidth());
             stmt.setDouble(4, product.getHeight());
             stmt.setDouble(5, product.getDepth());
-            stmt.setInt(6, product.getQuantity());
+            stmt.setDouble(6, product.getQuantity());
+            stmt.setInt(7, product.getCategory()); // 🔹 Ajout de la catégorie
 
             return stmt.executeUpdate() > 0;
 
@@ -57,6 +59,37 @@ public class ProductDAO {
         }
         return false;
     }
+
+    public boolean updateProductCategory(String barcode, int newCategory) {
+        String sql = "UPDATE products SET category = ? WHERE barcode = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, newCategory);
+            stmt.setString(2, barcode);
+
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateProductStock(String barcode, double newQuantity) {
+        String query = "UPDATE products SET quantity = ? WHERE barcode = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setDouble(1, newQuantity);  // 🔥 Assurer que c'est bien un `double`
+            stmt.setString(2, barcode);
+            int rowsUpdated = stmt.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     public List<Product> findProductsByNameOrBarcode(String query) {
         List<Product> products = new ArrayList<>();
@@ -77,7 +110,9 @@ public class ProductDAO {
                         rs.getDouble("width"),
                         rs.getDouble("height"),
                         rs.getDouble("depth"),
-                        rs.getInt("quantity")
+                        rs.getDouble("quantity"),
+                        rs.getInt("category"),
+                        5// 🔹 Ajout de la catégorie
                 ));
             }
         } catch (SQLException e) {
@@ -86,7 +121,6 @@ public class ProductDAO {
         return products;
     }
 
-    // 🔹 New method: Find products by barcode
     public List<Product> findProductByBarcode(String barcode) {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT * FROM products WHERE barcode = ?";
@@ -105,7 +139,9 @@ public class ProductDAO {
                         rs.getDouble("width"),
                         rs.getDouble("height"),
                         rs.getDouble("depth"),
-                        rs.getInt("quantity")
+                        rs.getDouble("quantity"),
+                        rs.getInt("category"),
+                        5// 🔹 Ajout de la catégorie
                 ));
             }
         } catch (SQLException e) {

@@ -28,14 +28,6 @@
     </filter-mapping>
 
 
-    <servlet>
-        <servlet-name>WarehouseServlet</servlet-name>
-        <servlet-class>org.example.mywmsapp.controller.WarehouseServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>WarehouseServlet</servlet-name>
-        <url-pattern>/warehouse</url-pattern>
-    </servlet-mapping>
 
 
     <servlet>
