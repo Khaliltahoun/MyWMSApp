@@ -133,10 +133,10 @@ public class OdooService {
      */
     private int mapCategoryNameToId(String categoryName) {
         switch (categoryName.toLowerCase()) {
-            case "catégorie 1": return 1;
-            case "catégorie 2": return 2;
-            case "catégorie 3": return 3;
-            case "catégorie 4": return 4;
+            case "1": return 1;
+            case "2": return 2;
+            case "3": return 3;
+            case "4": return 4;
             default: return -1; // Catégorie inconnue
         }
     }
@@ -148,7 +148,7 @@ public class OdooService {
         OdooService odooService = new OdooService();
 
         // 🔎 Tester avec différents codes-barres
-        String barcode = "121212";  // Modifier pour tester d'autres produits
+        String barcode = "1234";  // Modifier pour tester d'autres produits
         Product product = odooService.getProductByBarcode(barcode);
 
         if (product != null) {
